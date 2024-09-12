@@ -77,10 +77,12 @@ jooq {
 			password = 'demo_pass'
 		}
 		generator {
+			name = 'org.jooq.codegen.KotlinGenerator'
 			database {
 				name = 'org.jooq.meta.postgres.PostgresDatabase'
 				inputSchema = 'public'
 				includes = ".*"
+				excludes = 'flyway_schema_history'
 			}
 			generate {
 				relations = true
