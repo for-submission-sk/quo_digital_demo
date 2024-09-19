@@ -3,6 +3,10 @@ package com.example.quo_digital_demo.controllers
 import com.example.quo_digital_demo.models.Author
 import com.example.quo_digital_demo.services.AuthorsService
 import com.example.quo_digital_demo.services.AuthorsService.Page
+import jakarta.validation.constraints.Min
+import jakarta.validation.constraints.NotBlank
+import org.hibernate.validator.constraints.Range
+import org.springframework.validation.BindingResult
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -11,14 +15,33 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
+/**
+ * 著者情報を扱うコントローラー
+ *
+ * HTTPのパラメーター (このクラスのpublicメソッドの引数) の不正については、
+ * 実装にかかる時間も考慮し、今回は以下の方針で書きます。
+ * ・アプリ側にはエラーが起きた事しか伝えない (404と500の区別のみ)
+ * ・サーバ側のログファイルに詳細を残す
+ * ・個々のコントローラーでは例外を投げ、GlobalErrorControllerで処理する
+ *
+ * 業務では、アプリ側に返す情報は、デバッグし易さとセキュリティのバランスを考え、プロジェクトの方針に合わせます。
+ */
+@Validated
 @RestController
 @RequestMapping("/authors")
 class AuthorsController(private val authorsService: AuthorsService) {
 
-    // TODO: 引数のバリデーション
+    data class FindPageForm(
+        @field: Min(1) val pageNum: Int = 1,
+        @field: Range(min=1, max=20) val itemsPerPage: Int = 10
+    )
+
     @GetMapping("/find_page")
-    fun findPage(@RequestParam pageNum: Int = 1, @RequestParam itemsPerPage: Int = 10): Page {
-        return authorsService.findPage(pageNum, itemsPerPage)
+    fun findPage(@Validated form: FindPageForm, result: BindingResult): Page {
+        if (result.hasErrors()) {
+            throw toException(result)
+        }
+        return authorsService.findPage(form.pageNum, form.itemsPerPage)
     }
 
     @GetMapping("/find")
@@ -26,20 +49,36 @@ class AuthorsController(private val authorsService: AuthorsService) {
         return authorsService.findById(id)
     }
 
-    // TODO: fullNameのバリデーション
+    data class CreateForm(
+        @field: NotBlank val fullName: String
+    )
+
     @PostMapping("/create")
-    fun create(@RequestParam fullName: String): Author {
-        return authorsService.create(fullName)
+    fun create(@Validated form: CreateForm, result: BindingResult): Author {
+        if (result.hasErrors()) {
+            throw toException(result)
+        }
+        return authorsService.create(form.fullName)
     }
 
-    // TODO: fullNameのバリデーション
+    data class UpdateForm(
+        val id: UUID,
+        @field: NotBlank val fullName: String
+    )
+
     @PostMapping("/update")
-    fun update(@RequestParam id: UUID, @RequestParam fullName: String): Int {
-        return authorsService.update(Author(id = id, fullName = fullName))
+    fun update(@Validated form: UpdateForm, result: BindingResult): Int {
+        if (result.hasErrors()) {
+            throw toException(result)
+        }
+        return authorsService.update(Author(id = form.id, fullName = form.fullName))
     }
 
     @PostMapping("/delete")
-    fun deleteById(id: UUID): Int {
+    fun deleteById(@RequestParam id: UUID): Int {
         return authorsService.deleteById(id)
     }
+
+    private fun toException(result: BindingResult) =
+        IllegalArgumentException(result.toString())
 }
