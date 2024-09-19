@@ -10,14 +10,11 @@ import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.HttpStatus
 import org.springframework.test.context.jdbc.Sql
 import org.springframework.util.LinkedMultiValueMap
-import org.springframework.util.MultiValueMap
-import java.net.URI
 import kotlin.test.Test
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @Sql("classpath:sql/AuthorsControllerIntegrationTest.sql")
 @Sql(value = ["classpath:sql/clear_authors.sql"], executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-
 class AuthorsControllerIntegrationTest {
 
     @Autowired
@@ -34,9 +31,12 @@ class AuthorsControllerIntegrationTest {
 
     @Test
     fun test_findById_success() {
+
         val id = "29a15ec5-6a0a-44c0-9a35-e85c7a472aec"
+
         val response = template?.getForEntity("/authors/find?id=$id", Author::class.java)
         assertThat(response?.statusCode).isEqualTo(HttpStatus.OK)
+
         val author = response?.body
         assertThat(author).isNotNull()
         assertThat(author?.id.toString() == id).isTrue()
@@ -45,9 +45,12 @@ class AuthorsControllerIntegrationTest {
 
     @Test
     fun test_findById_null() {
+
         val id = "11111111-1111-1111-1111-111111111111"
+
         val response = template?.getForEntity("/authors/find?id=$id", Author::class.java)
         assertThat(response?.statusCode).isEqualTo(HttpStatus.OK)
+
         val author = response?.body
         assertThat(author).isNull()
     }
@@ -55,6 +58,17 @@ class AuthorsControllerIntegrationTest {
     @Test
     fun test_create() {
 
+        val fullName = "Ken Tanaka"
+
+        val form = LinkedMultiValueMap<String, Any>()
+        form.add("fullName", fullName)
+
+        val response = template?.postForEntity("/authors/create", form, Author::class.java)
+        assertThat(response?.statusCode).isEqualTo(HttpStatus.OK)
+
+        val author = response?.body
+        assertThat(author).isNotNull()
+        assertThat(author?.fullName == fullName).isTrue()
     }
 
     @Test
@@ -64,10 +78,13 @@ class AuthorsControllerIntegrationTest {
 
     @Test
     fun test_deleteById() {
-        val map: MultiValueMap<String, Any> = LinkedMultiValueMap()
-        map.add("id", "29a15ec5-6a0a-44c0-9a35-e85c7a472aec")
-        val uri = URI.create("/authors/delete")
-        val response = template?.postForEntity(uri, map, String::class.java)
+
+        val form = LinkedMultiValueMap<String, Any>()
+        form.add("id", "29a15ec5-6a0a-44c0-9a35-e85c7a472aec")
+
+        val response = template?.postForEntity("/authors/delete", form, Integer::class.java)
         assertThat(response?.statusCode).isEqualTo(HttpStatus.OK)
+
+        assertThat(response?.body).isEqualTo(Integer.valueOf(1))
     }
 }
