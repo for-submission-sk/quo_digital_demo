@@ -32,7 +32,7 @@ class BooksController(private val booksService: BooksService) {
     )
 
     /**
-     * 著者に紐づく本を取得
+     * 著者に紐づく書籍情報の一覧を取得
      */
     @GetMapping("/find_page_by_author_id")
     fun findPageByAuthorId(@Validated form: FindPageByAuthorIdForm, result: BindingResult): Page {
@@ -50,6 +50,9 @@ class BooksController(private val booksService: BooksService) {
         @field: Range(min=1, max=20) val itemsPerPage: Int = 10
     )
 
+    /**
+     * 書籍情報の一覧を取得
+     */
     @GetMapping("/find_page")
     fun findPage(@Validated form: FindPageForm, result: BindingResult): Page {
         if (result.hasErrors()) {
@@ -58,6 +61,9 @@ class BooksController(private val booksService: BooksService) {
         return booksService.findPage(form.pageNum, form.itemsPerPage)
     }
 
+    /**
+     * 特定の書籍情報を取得
+     */
     @GetMapping("/find")
     fun findById(@RequestParam id: UUID): Book? {
         return booksService.findById(id)
@@ -68,6 +74,9 @@ class BooksController(private val booksService: BooksService) {
         val authorIds: List<UUID>
     )
 
+    /**
+     * 書籍情報の登録
+     */
     @PostMapping("/create")
     fun create(@Validated form: CreateForm, result: BindingResult): Book {
         if (result.hasErrors()) {
@@ -84,6 +93,9 @@ class BooksController(private val booksService: BooksService) {
         val authorIds: List<UUID>
     )
 
+    /**
+     * 書籍情報の更新
+     */
     @PostMapping("/update")
     fun update(@Validated form: UpdateForm, result: BindingResult): Int {
         if (result.hasErrors()) {
@@ -95,6 +107,9 @@ class BooksController(private val booksService: BooksService) {
             authorIds = form.authorIds))
     }
 
+    /**
+     * 書籍情報の削除
+     */
     @PostMapping("/delete")
     fun deleteById(@RequestParam id: UUID): Int {
         return booksService.deleteById(id)

@@ -25,7 +25,7 @@ import java.util.Date
 /**
  * stackTraceのような必要以上の情報を外部に公開しないため定義
  * ステータスコードも外部向けは404を除き500に変更
- * 内部向けには詳細をログファイルに出力
+ * 内部向けには詳細をログファイルに出力 (内容の整形は時間の都合により省略)
  */
 @RestController
 @RequestMapping("\${server.error.path:\${error.path:/error}}")
