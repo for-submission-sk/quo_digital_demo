@@ -2,7 +2,7 @@ package com.example.quo_digital_demo.controllers
 
 import com.example.quo_digital_demo.models.Author
 import com.example.quo_digital_demo.services.AuthorsService
-import com.example.quo_digital_demo.services.AuthorsService.Page
+import com.example.quo_digital_demo.services.Page
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
 import org.hibernate.validator.constraints.Range
@@ -40,7 +40,7 @@ class AuthorsController(private val authorsService: AuthorsService) {
      * 著者情報の一覧を取得
      */
     @GetMapping("/find_page")
-    fun findPage(@Validated form: FindPageForm, result: BindingResult): Page {
+    fun findPage(@Validated form: FindPageForm, result: BindingResult): Page<Author> {
         if (result.hasErrors()) {
             throw toException(result)
         }

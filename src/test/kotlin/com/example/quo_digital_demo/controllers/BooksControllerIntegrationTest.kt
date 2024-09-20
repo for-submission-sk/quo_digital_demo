@@ -1,7 +1,7 @@
 package com.example.quo_digital_demo.controllers
 
 import com.example.quo_digital_demo.models.Book
-import com.example.quo_digital_demo.services.BooksService.Page
+import com.example.quo_digital_demo.services.Page
 import org.assertj.core.api.Assertions.assertThat
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -28,8 +28,8 @@ class BooksControllerIntegrationTest {
             Page::class.java)
         assertThat(response?.statusCode).isEqualTo(HttpStatus.OK)
         val page = response?.body
-        assertThat(page?.books?.size == 1).isTrue()
-        assertThat(page?.numberOfAllBooks == 1).isTrue()
+        assertThat(page?.items?.size == 1).isTrue()
+        assertThat(page?.itemsTotalNum == 1).isTrue()
     }
 
     @Test
@@ -37,8 +37,8 @@ class BooksControllerIntegrationTest {
         val response = template?.getForEntity("/books/find_page?pageNum=1&itemsPerPage=10", Page::class.java)
         assertThat(response?.statusCode).isEqualTo(HttpStatus.OK)
         val page = response?.body
-        assertThat(page?.books?.size == 2).isTrue()
-        assertThat(page?.numberOfAllBooks == 2).isTrue()
+        assertThat(page?.items?.size == 2).isTrue()
+        assertThat(page?.itemsTotalNum == 2).isTrue()
     }
 
     @Test

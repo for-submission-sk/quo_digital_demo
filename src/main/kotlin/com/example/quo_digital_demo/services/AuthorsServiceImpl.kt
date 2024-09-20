@@ -2,14 +2,13 @@ package com.example.quo_digital_demo.services
 
 import com.example.quo_digital_demo.models.Author
 import com.example.quo_digital_demo.repositories.AuthorsRepository
-import com.example.quo_digital_demo.services.AuthorsService.Page
 import org.springframework.stereotype.Service
 import java.util.UUID
 
 @Service
 class AuthorsServiceImpl(private val authorsRepository: AuthorsRepository) : AuthorsService {
 
-    override fun findPage(pageNum: Int, itemsPerPage: Int): Page {
+    override fun findPage(pageNum: Int, itemsPerPage: Int): Page<Author> {
         val offset = (pageNum - 1) * itemsPerPage
         val authors = authorsRepository.findWithOffsetLimit(offset, itemsPerPage)
         val allNum = authorsRepository.countAll()
