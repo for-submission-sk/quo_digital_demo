@@ -9,6 +9,13 @@ import java.util.UUID
 @Service
 class BooksServiceImpl(private val booksRepository: BooksRepository) : BooksService {
 
+    override fun findPageByAuthorId(authorId: UUID, pageNum: Int, itemsPerPage: Int): Page {
+        val offset = (pageNum - 1) * itemsPerPage
+        val books = booksRepository.findByAuthorIdWithOffsetLimit(authorId, offset, itemsPerPage)
+        val allNum = booksRepository.countAllByAuthorId(authorId)
+        return Page(books, allNum)
+    }
+
     override fun findPage(pageNum: Int, itemsPerPage: Int): Page {
         val offset = (pageNum - 1) * itemsPerPage
         val books = booksRepository.findByOffsetLimit(offset, itemsPerPage)

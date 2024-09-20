@@ -11,6 +11,7 @@ interface BooksService {
         val books: List<Book>,
         val numberOfAllBooks: Int)
 
+    fun findPageByAuthorId(authorId: UUID, pageNum: Int, itemsPerPage: Int): Page
     fun findPage(pageNum: Int, itemsPerPage: Int): Page
     fun findById(id: UUID): Book?
     fun create(title: String, authorIds: List<UUID>): Book

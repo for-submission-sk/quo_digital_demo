@@ -4,6 +4,8 @@ import com.example.quo_digital_demo.models.Book
 import java.util.UUID
 
 interface BooksRepository {
+    fun countAllByAuthorId(authorId: UUID): Int
+    fun findByAuthorIdWithOffsetLimit(authorId: UUID, offset: Int, limit: Int): List<Book>
     fun countAll(): Int
     fun findByOffsetLimit(offset: Int, limit: Int): List<Book>
     fun findById(id: UUID): Book?

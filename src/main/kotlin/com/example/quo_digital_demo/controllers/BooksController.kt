@@ -25,6 +25,26 @@ import java.util.UUID
 @RequestMapping("/books")
 class BooksController(private val booksService: BooksService) {
 
+    data class FindPageByAuthorIdForm(
+        val authorId: UUID,
+        @field: Min(1) val pageNum: Int = 1,
+        @field: Range(min=1, max=20) val itemsPerPage: Int = 10
+    )
+
+    /**
+     * 著者に紐づく本を取得
+     */
+    @GetMapping("/find_page_by_author_id")
+    fun findPageByAuthorId(@Validated form: FindPageByAuthorIdForm, result: BindingResult): Page {
+        if (result.hasErrors()) {
+            throw toException(result)
+        }
+        return booksService.findPageByAuthorId(
+            form.authorId,
+            form.pageNum,
+            form.itemsPerPage)
+    }
+
     data class FindPageForm(
         @field: Min(1) val pageNum: Int = 1,
         @field: Range(min=1, max=20) val itemsPerPage: Int = 10

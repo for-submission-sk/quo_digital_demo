@@ -22,12 +22,23 @@ class BooksControllerIntegrationTest {
     var template: TestRestTemplate? = null
 
     @Test
-    fun test_findPage_success() {
-        val response = template?.getForEntity("/books/find_page?pageNum=1&itemsPerPage=10", Page::class.java)
+    fun test_findPageByAuthorId_success() {
+        val response = template?.getForEntity(
+            "/books/find_page_by_author_id?authorId=1a870220-9ffa-425b-8269-6e959afe623f&pageNum=1&itemsPerPage=10",
+            Page::class.java)
         assertThat(response?.statusCode).isEqualTo(HttpStatus.OK)
         val page = response?.body
         assertThat(page?.books?.size == 1).isTrue()
         assertThat(page?.numberOfAllBooks == 1).isTrue()
+    }
+
+    @Test
+    fun test_findPage_success() {
+        val response = template?.getForEntity("/books/find_page?pageNum=1&itemsPerPage=10", Page::class.java)
+        assertThat(response?.statusCode).isEqualTo(HttpStatus.OK)
+        val page = response?.body
+        assertThat(page?.books?.size == 2).isTrue()
+        assertThat(page?.numberOfAllBooks == 2).isTrue()
     }
 
     @Test
