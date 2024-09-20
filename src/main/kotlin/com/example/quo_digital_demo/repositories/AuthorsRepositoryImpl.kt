@@ -16,7 +16,7 @@ class AuthorsRepositoryImpl(private val context: DSLContext) : AuthorsRepository
             .fetchOne()?.into(Int::class.java)!!
     }
 
-    override fun findByOffsetLimit(offset: Int, limit: Int): List<Author> {
+    override fun findWithOffsetLimit(offset: Int, limit: Int): List<Author> {
         return context
             .select().from(AUTHORS)
             .orderBy(AUTHORS.CREATED_AT)
@@ -53,10 +53,6 @@ class AuthorsRepositoryImpl(private val context: DSLContext) : AuthorsRepository
             .delete(AUTHORS)
             .where(AUTHORS.ID.eq(id))
             .execute()
-    }
-
-    override fun deleteAll() {
-        context.deleteFrom(AUTHORS).execute()
     }
 
     private fun toModel(record: Record) = Author(

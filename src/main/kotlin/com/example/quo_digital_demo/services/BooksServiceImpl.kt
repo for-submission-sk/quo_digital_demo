@@ -18,7 +18,7 @@ class BooksServiceImpl(private val booksRepository: BooksRepository) : BooksServ
 
     override fun findPage(pageNum: Int, itemsPerPage: Int): Page {
         val offset = (pageNum - 1) * itemsPerPage
-        val books = booksRepository.findByOffsetLimit(offset, itemsPerPage)
+        val books = booksRepository.findWithOffsetLimit(offset, itemsPerPage)
         val allNum = booksRepository.countAll()
         return Page(books, allNum)
     }

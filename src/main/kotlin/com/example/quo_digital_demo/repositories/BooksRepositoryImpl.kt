@@ -42,7 +42,7 @@ class BooksRepositoryImpl(private val context: DSLContext) : BooksRepository {
             .fetchOne()?.into(Int::class.java)!!
     }
 
-    override fun findByOffsetLimit(offset: Int, limit: Int): List<Book> {
+    override fun findWithOffsetLimit(offset: Int, limit: Int): List<Book> {
         return context
             .select().from(BOOKS)
             .orderBy(BOOKS.CREATED_AT)

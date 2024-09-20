@@ -11,7 +11,7 @@ class AuthorsServiceImpl(private val authorsRepository: AuthorsRepository) : Aut
 
     override fun findPage(pageNum: Int, itemsPerPage: Int): Page {
         val offset = (pageNum - 1) * itemsPerPage
-        val authors = authorsRepository.findByOffsetLimit(offset, itemsPerPage)
+        val authors = authorsRepository.findWithOffsetLimit(offset, itemsPerPage)
         val allNum = authorsRepository.countAll()
         return Page(authors, allNum)
     }
