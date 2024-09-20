@@ -45,7 +45,7 @@ class BooksController(private val booksService: BooksService) {
 
     data class CreateForm(
         @field: NotBlank val title: String,
-        @field: NotBlank val authorIds: List<UUID>
+        val authorIds: List<UUID>
     )
 
     @PostMapping("/create")
@@ -53,13 +53,15 @@ class BooksController(private val booksService: BooksService) {
         if (result.hasErrors()) {
             throw toException(result)
         }
-        return booksService.create(form.title, form.authorIds)
+        return booksService.create(
+            form.title,
+            form.authorIds)
     }
 
     data class UpdateForm(
         val id: UUID,
         @field: NotBlank val title: String,
-        @field: NotBlank val authorIds: List<UUID>
+        val authorIds: List<UUID>
     )
 
     @PostMapping("/update")
