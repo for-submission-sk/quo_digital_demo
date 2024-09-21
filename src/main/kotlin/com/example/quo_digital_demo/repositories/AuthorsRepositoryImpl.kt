@@ -32,12 +32,12 @@ class AuthorsRepositoryImpl(private val context: DSLContext) : AuthorsRepository
             .fetchOne()?.let { toModel(it) }
     }
 
-    override fun create(fullName: String): Author {
-        val record = context.newRecord(AUTHORS).also {
-            it.fullName = fullName
-            it.store()
-        }
-        return toModel(record)
+    override fun create(fullName: String): Int {
+        return context
+            .insertInto(AUTHORS)
+            .columns(AUTHORS.FULL_NAME)
+            .values(fullName)
+            .execute()
     }
 
     override fun update(author: Author): Int {

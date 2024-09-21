@@ -78,15 +78,10 @@ class BooksControllerIntegrationTest {
         form.add("title", title)
         form.add("authorIds", "$id1,$id2")
 
-        val response = template?.postForEntity("/books/create", form, Book::class.java)
+        val response = template?.postForEntity("/books/create", form, Integer::class.java)
         assertThat(response?.statusCode).isEqualTo(HttpStatus.OK)
 
-        val book = response?.body
-        assertThat(book).isNotNull()
-        assertThat(book?.title == title).isTrue()
-        assertThat(book?.authorIds?.size == 2).isTrue()
-        assertThat(book?.authorIds!![0] == id1).isTrue()
-        assertThat(book.authorIds[1] == id2).isTrue()
+        assertThat(response?.body).isEqualTo(Integer.valueOf(1))
     }
 
     @Test

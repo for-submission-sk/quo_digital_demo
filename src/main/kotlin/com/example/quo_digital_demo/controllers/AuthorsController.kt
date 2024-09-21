@@ -63,7 +63,7 @@ class AuthorsController(private val authorsService: AuthorsService) {
      * 著者情報の登録
      */
     @PostMapping("/create")
-    fun create(@Validated form: CreateForm, result: BindingResult): Author {
+    fun create(@Validated form: CreateForm, result: BindingResult): Int {
         if (result.hasErrors()) {
             throw toException(result)
         }

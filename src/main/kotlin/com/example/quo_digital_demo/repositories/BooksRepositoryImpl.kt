@@ -58,13 +58,12 @@ class BooksRepositoryImpl(private val context: DSLContext) : BooksRepository {
             .fetchOne()?.let { toModel(it) }
     }
 
-    override fun create(title: String, authorIds: List<UUID>): Book {
-        val record = context.newRecord(BOOKS).also {
-            it.title = title
-            it.authorIds = authorIds.toTypedArray()
-            it.store()
-        }
-        return toModel(record)
+    override fun create(title: String, authorIds: List<UUID>): Int {
+        return context
+            .insertInto(BOOKS)
+            .columns(BOOKS.TITLE, BOOKS.AUTHOR_IDS)
+            .values(title, authorIds.toTypedArray())
+            .execute()
     }
 
     override fun update(book: Book): Int {

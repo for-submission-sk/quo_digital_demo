@@ -19,7 +19,7 @@ class AuthorsServiceImpl(private val authorsRepository: AuthorsRepository) : Aut
         return authorsRepository.findById(id)
     }
 
-    override fun create(fullName: String): Author {
+    override fun create(fullName: String): Int {
         return authorsRepository.create(fullName)
     }
 

@@ -8,7 +8,7 @@ import java.util.UUID
 interface AuthorsService {
     fun findPage(pageNum: Int, itemsPerPage: Int): Page<Author>
     fun findById(id: UUID): Author?
-    fun create(fullName: String): Author
+    fun create(fullName: String): Int
     fun update(author: Author): Int
     fun deleteById(id: UUID): Int
 }

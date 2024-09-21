@@ -9,7 +9,7 @@ interface BooksService {
     fun findPageByAuthorId(authorId: UUID, pageNum: Int, itemsPerPage: Int): Page<Book>
     fun findPage(pageNum: Int, itemsPerPage: Int): Page<Book>
     fun findById(id: UUID): Book?
-    fun create(title: String, authorIds: List<UUID>): Book
+    fun create(title: String, authorIds: List<UUID>): Int
     fun update(book: Book): Int
     fun deleteById(id: UUID): Int
 }

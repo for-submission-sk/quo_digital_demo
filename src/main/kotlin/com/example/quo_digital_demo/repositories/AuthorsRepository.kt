@@ -7,7 +7,7 @@ interface AuthorsRepository {
     fun countAll(): Int
     fun findWithOffsetLimit(offset: Int, limit: Int): List<Author>
     fun findById(id: UUID): Author?
-    fun create(fullName: String): Author
+    fun create(fullName: String): Int
     fun update(author: Author): Int
     fun deleteById(id: UUID): Int
 }

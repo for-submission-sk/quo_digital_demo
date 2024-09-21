@@ -9,7 +9,7 @@ interface BooksRepository {
     fun countAll(): Int
     fun findWithOffsetLimit(offset: Int, limit: Int): List<Book>
     fun findById(id: UUID): Book?
-    fun create(title: String, authorIds: List<UUID>): Book
+    fun create(title: String, authorIds: List<UUID>): Int
     fun update(book: Book): Int
     fun deleteById(id: UUID): Int
 }

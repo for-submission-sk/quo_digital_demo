@@ -78,7 +78,7 @@ class BooksController(private val booksService: BooksService) {
      * 書籍情報の登録
      */
     @PostMapping("/create")
-    fun create(@Validated form: CreateForm, result: BindingResult): Book {
+    fun create(@Validated form: CreateForm, result: BindingResult): Int {
         if (result.hasErrors()) {
             throw toException(result)
         }

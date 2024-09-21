@@ -63,12 +63,10 @@ class AuthorsControllerIntegrationTest {
         val form = LinkedMultiValueMap<String, Any>()
         form.add("fullName", fullName)
 
-        val response = template?.postForEntity("/authors/create", form, Author::class.java)
+        val response = template?.postForEntity("/authors/create", form, Integer::class.java)
         assertThat(response?.statusCode).isEqualTo(HttpStatus.OK)
 
-        val author = response?.body
-        assertThat(author).isNotNull()
-        assertThat(author?.fullName == fullName).isTrue()
+        assertThat(response?.body).isEqualTo(Integer.valueOf(1))
     }
 
     @Test
