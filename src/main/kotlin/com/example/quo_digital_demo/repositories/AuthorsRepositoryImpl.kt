@@ -32,11 +32,11 @@ class AuthorsRepositoryImpl(private val context: DSLContext) : AuthorsRepository
             .fetchOne()?.let { toModel(it) }
     }
 
-    override fun create(fullName: String): Int {
+    override fun create(author: Author): Int {
         return context
             .insertInto(AUTHORS)
             .columns(AUTHORS.FULL_NAME)
-            .values(fullName)
+            .values(author.fullName)
             .execute()
     }
 
@@ -56,8 +56,8 @@ class AuthorsRepositoryImpl(private val context: DSLContext) : AuthorsRepository
     }
 
     private fun toModel(record: Record) = Author(
-        record.getValue(AUTHORS.ID)!!,  // DBでNOT NULL制約
-        record.getValue(AUTHORS.FULL_NAME)!!,  // 同上
+        record.getValue(AUTHORS.ID),
+        record.getValue(AUTHORS.FULL_NAME)!!,  // DBでNOT NULL制約
         record.getValue(AUTHORS.CREATED_AT),
         record.getValue(AUTHORS.UPDATED_AT))
 }

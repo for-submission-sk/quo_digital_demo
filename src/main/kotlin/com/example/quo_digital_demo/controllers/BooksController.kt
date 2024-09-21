@@ -82,9 +82,9 @@ class BooksController(private val booksService: BooksService) {
         if (result.hasErrors()) {
             throw toException(result)
         }
-        return booksService.create(
-            form.title,
-            form.authorIds)
+        return booksService.create(Book(
+            title = form.title,
+            authorIds = form.authorIds))
     }
 
     data class UpdateForm(

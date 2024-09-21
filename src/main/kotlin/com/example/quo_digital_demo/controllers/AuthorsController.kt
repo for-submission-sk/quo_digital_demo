@@ -67,7 +67,8 @@ class AuthorsController(private val authorsService: AuthorsService) {
         if (result.hasErrors()) {
             throw toException(result)
         }
-        return authorsService.create(form.fullName)
+        return authorsService.create(Author(
+            fullName = form.fullName))
     }
 
     data class UpdateForm(
@@ -83,7 +84,9 @@ class AuthorsController(private val authorsService: AuthorsService) {
         if (result.hasErrors()) {
             throw toException(result)
         }
-        return authorsService.update(Author(id = form.id, fullName = form.fullName))
+        return authorsService.update(Author(
+            id = form.id,
+            fullName = form.fullName))
     }
 
     /**

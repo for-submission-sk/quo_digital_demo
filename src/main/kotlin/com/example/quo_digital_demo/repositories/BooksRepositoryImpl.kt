@@ -58,11 +58,11 @@ class BooksRepositoryImpl(private val context: DSLContext) : BooksRepository {
             .fetchOne()?.let { toModel(it) }
     }
 
-    override fun create(title: String, authorIds: List<UUID>): Int {
+    override fun create(book: Book): Int {
         return context
             .insertInto(BOOKS)
             .columns(BOOKS.TITLE, BOOKS.AUTHOR_IDS)
-            .values(title, authorIds.toTypedArray())
+            .values(book.title, book.authorIds.toTypedArray())
             .execute()
     }
 
@@ -83,8 +83,8 @@ class BooksRepositoryImpl(private val context: DSLContext) : BooksRepository {
     }
 
     private fun toModel(record: Record) = Book(
-        record.getValue(BOOKS.ID)!!,  // DBでNOT NULL制約
-        record.getValue(BOOKS.TITLE)!!,  // 同上
+        record.getValue(BOOKS.ID),
+        record.getValue(BOOKS.TITLE)!!,  // DBでNOT NULL制約
         record.getValue(BOOKS.AUTHOR_IDS)!!.filterNotNull().toList(),  // 同上
         record.getValue(BOOKS.CREATED_AT),
         record.getValue(BOOKS.UPDATED_AT)

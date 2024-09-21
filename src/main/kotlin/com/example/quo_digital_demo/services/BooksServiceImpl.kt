@@ -26,8 +26,8 @@ class BooksServiceImpl(private val booksRepository: BooksRepository) : BooksServ
         return booksRepository.findById(id)
     }
 
-    override fun create(title: String, authorIds: List<UUID>): Int {
-        return booksRepository.create(title, authorIds)
+    override fun create(book: Book): Int {
+        return booksRepository.create(book)
     }
 
     override fun update(book: Book): Int {
