@@ -6,14 +6,9 @@ import java.util.UUID
 
 @Service
 interface AuthorsService {
-
-    data class Page(
-        val authors: List<Author>,
-        val numberOfAllAuthors: Int)
-
-    fun findPage(pageNum: Int, itemsPerPage: Int): Page
+    fun findPage(pageNum: Int, itemsPerPage: Int): Page<Author>
     fun findById(id: UUID): Author?
-    fun create(fullName: String): Author
+    fun create(author: Author): Int
     fun update(author: Author): Int
     fun deleteById(id: UUID): Int
 }

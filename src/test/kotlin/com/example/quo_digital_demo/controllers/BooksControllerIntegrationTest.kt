@@ -1,7 +1,7 @@
 package com.example.quo_digital_demo.controllers
 
 import com.example.quo_digital_demo.models.Book
-import com.example.quo_digital_demo.services.BooksService.Page
+import com.example.quo_digital_demo.services.Page
 import org.assertj.core.api.Assertions.assertThat
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -28,8 +28,8 @@ class BooksControllerIntegrationTest {
             Page::class.java)
         assertThat(response?.statusCode).isEqualTo(HttpStatus.OK)
         val page = response?.body
-        assertThat(page?.books?.size == 1).isTrue()
-        assertThat(page?.numberOfAllBooks == 1).isTrue()
+        assertThat(page?.items?.size == 1).isTrue()
+        assertThat(page?.itemsTotalNum == 1).isTrue()
     }
 
     @Test
@@ -37,8 +37,8 @@ class BooksControllerIntegrationTest {
         val response = template?.getForEntity("/books/find_page?pageNum=1&itemsPerPage=10", Page::class.java)
         assertThat(response?.statusCode).isEqualTo(HttpStatus.OK)
         val page = response?.body
-        assertThat(page?.books?.size == 2).isTrue()
-        assertThat(page?.numberOfAllBooks == 2).isTrue()
+        assertThat(page?.items?.size == 2).isTrue()
+        assertThat(page?.itemsTotalNum == 2).isTrue()
     }
 
     @Test
@@ -78,15 +78,10 @@ class BooksControllerIntegrationTest {
         form.add("title", title)
         form.add("authorIds", "$id1,$id2")
 
-        val response = template?.postForEntity("/books/create", form, Book::class.java)
+        val response = template?.postForEntity("/books/create", form, Integer::class.java)
         assertThat(response?.statusCode).isEqualTo(HttpStatus.OK)
 
-        val book = response?.body
-        assertThat(book).isNotNull()
-        assertThat(book?.title == title).isTrue()
-        assertThat(book?.authorIds?.size == 2).isTrue()
-        assertThat(book?.authorIds!![0] == id1).isTrue()
-        assertThat(book.authorIds[1] == id2).isTrue()
+        assertThat(response?.body).isEqualTo(Integer.valueOf(1))
     }
 
     @Test

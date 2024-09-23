@@ -4,7 +4,7 @@ import java.time.OffsetDateTime
 import java.util.UUID
 
 data class Author(
-    val id: UUID,
+    val id: UUID? = null,
     val fullName: String,
     val createdAt: OffsetDateTime? = null,
     val updatedAt: OffsetDateTime? = null)

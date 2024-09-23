@@ -88,9 +88,9 @@ jooq {
 				excludes = 'flyway_schema_history'
 			}
 			generate {
-				relations = true
-				records = true
-				pojos = true
+				relations = false
+				records = false
+				pojos = false
 			}
 			target {
 				directory = 'src/main/jooq'

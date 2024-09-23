@@ -2,7 +2,7 @@ package com.example.quo_digital_demo.controllers
 
 import com.example.quo_digital_demo.models.Book
 import com.example.quo_digital_demo.services.BooksService
-import com.example.quo_digital_demo.services.BooksService.Page
+import com.example.quo_digital_demo.services.Page
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
 import org.hibernate.validator.constraints.Range
@@ -35,7 +35,7 @@ class BooksController(private val booksService: BooksService) {
      * 著者に紐づく書籍情報の一覧を取得
      */
     @GetMapping("/find_page_by_author_id")
-    fun findPageByAuthorId(@Validated form: FindPageByAuthorIdForm, result: BindingResult): Page {
+    fun findPageByAuthorId(@Validated form: FindPageByAuthorIdForm, result: BindingResult): Page<Book> {
         if (result.hasErrors()) {
             throw toException(result)
         }
@@ -54,7 +54,7 @@ class BooksController(private val booksService: BooksService) {
      * 書籍情報の一覧を取得
      */
     @GetMapping("/find_page")
-    fun findPage(@Validated form: FindPageForm, result: BindingResult): Page {
+    fun findPage(@Validated form: FindPageForm, result: BindingResult): Page<Book> {
         if (result.hasErrors()) {
             throw toException(result)
         }
@@ -78,13 +78,13 @@ class BooksController(private val booksService: BooksService) {
      * 書籍情報の登録
      */
     @PostMapping("/create")
-    fun create(@Validated form: CreateForm, result: BindingResult): Book {
+    fun create(@Validated form: CreateForm, result: BindingResult): Int {
         if (result.hasErrors()) {
             throw toException(result)
         }
-        return booksService.create(
-            form.title,
-            form.authorIds)
+        return booksService.create(Book(
+            title = form.title,
+            authorIds = form.authorIds))
     }
 
     data class UpdateForm(

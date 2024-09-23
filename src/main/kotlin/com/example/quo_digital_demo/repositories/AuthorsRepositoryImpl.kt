@@ -16,7 +16,7 @@ class AuthorsRepositoryImpl(private val context: DSLContext) : AuthorsRepository
             .fetchOne()?.into(Int::class.java)!!
     }
 
-    override fun findByOffsetLimit(offset: Int, limit: Int): List<Author> {
+    override fun findWithOffsetLimit(offset: Int, limit: Int): List<Author> {
         return context
             .select().from(AUTHORS)
             .orderBy(AUTHORS.CREATED_AT)
@@ -32,12 +32,12 @@ class AuthorsRepositoryImpl(private val context: DSLContext) : AuthorsRepository
             .fetchOne()?.let { toModel(it) }
     }
 
-    override fun create(fullName: String): Author {
-        val record = context.newRecord(AUTHORS).also {
-            it.fullName = fullName
-            it.store()
-        }
-        return toModel(record)
+    override fun create(author: Author): Int {
+        return context
+            .insertInto(AUTHORS)
+            .columns(AUTHORS.FULL_NAME)
+            .values(author.fullName)
+            .execute()
     }
 
     override fun update(author: Author): Int {
@@ -55,13 +55,9 @@ class AuthorsRepositoryImpl(private val context: DSLContext) : AuthorsRepository
             .execute()
     }
 
-    override fun deleteAll() {
-        context.deleteFrom(AUTHORS).execute()
-    }
-
     private fun toModel(record: Record) = Author(
-        record.getValue(AUTHORS.ID)!!,  // DBでNOT NULL制約
-        record.getValue(AUTHORS.FULL_NAME)!!,  // 同上
+        record.getValue(AUTHORS.ID),
+        record.getValue(AUTHORS.FULL_NAME)!!,  // DBでNOT NULL制約
         record.getValue(AUTHORS.CREATED_AT),
         record.getValue(AUTHORS.UPDATED_AT))
 }

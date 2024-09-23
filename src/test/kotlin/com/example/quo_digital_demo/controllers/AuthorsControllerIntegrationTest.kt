@@ -1,7 +1,7 @@
 package com.example.quo_digital_demo.controllers
 
 import com.example.quo_digital_demo.models.Author
-import com.example.quo_digital_demo.services.AuthorsService.Page
+import com.example.quo_digital_demo.services.Page
 import org.assertj.core.api.Assertions.assertThat
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -25,8 +25,8 @@ class AuthorsControllerIntegrationTest {
         val response = template?.getForEntity("/authors/find_page?pageNum=1&itemsPerPage=10", Page::class.java)
         assertThat(response?.statusCode).isEqualTo(HttpStatus.OK)
         val page = response?.body
-        assertThat(page?.authors?.size == 1).isTrue()
-        assertThat(page?.numberOfAllAuthors == 1).isTrue()
+        assertThat(page?.items?.size == 1).isTrue()
+        assertThat(page?.itemsTotalNum == 1).isTrue()
     }
 
     @Test
@@ -63,12 +63,10 @@ class AuthorsControllerIntegrationTest {
         val form = LinkedMultiValueMap<String, Any>()
         form.add("fullName", fullName)
 
-        val response = template?.postForEntity("/authors/create", form, Author::class.java)
+        val response = template?.postForEntity("/authors/create", form, Integer::class.java)
         assertThat(response?.statusCode).isEqualTo(HttpStatus.OK)
 
-        val author = response?.body
-        assertThat(author).isNotNull()
-        assertThat(author?.fullName == fullName).isTrue()
+        assertThat(response?.body).isEqualTo(Integer.valueOf(1))
     }
 
     @Test

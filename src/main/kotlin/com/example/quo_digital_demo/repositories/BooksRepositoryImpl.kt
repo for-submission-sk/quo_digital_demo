@@ -42,7 +42,7 @@ class BooksRepositoryImpl(private val context: DSLContext) : BooksRepository {
             .fetchOne()?.into(Int::class.java)!!
     }
 
-    override fun findByOffsetLimit(offset: Int, limit: Int): List<Book> {
+    override fun findWithOffsetLimit(offset: Int, limit: Int): List<Book> {
         return context
             .select().from(BOOKS)
             .orderBy(BOOKS.CREATED_AT)
@@ -58,13 +58,12 @@ class BooksRepositoryImpl(private val context: DSLContext) : BooksRepository {
             .fetchOne()?.let { toModel(it) }
     }
 
-    override fun create(title: String, authorIds: List<UUID>): Book {
-        val record = context.newRecord(BOOKS).also {
-            it.title = title
-            it.authorIds = authorIds.toTypedArray()
-            it.store()
-        }
-        return toModel(record)
+    override fun create(book: Book): Int {
+        return context
+            .insertInto(BOOKS)
+            .columns(BOOKS.TITLE, BOOKS.AUTHOR_IDS)
+            .values(book.title, book.authorIds.toTypedArray())
+            .execute()
     }
 
     override fun update(book: Book): Int {
@@ -84,8 +83,8 @@ class BooksRepositoryImpl(private val context: DSLContext) : BooksRepository {
     }
 
     private fun toModel(record: Record) = Book(
-        record.getValue(BOOKS.ID)!!,  // DBでNOT NULL制約
-        record.getValue(BOOKS.TITLE)!!,  // 同上
+        record.getValue(BOOKS.ID),
+        record.getValue(BOOKS.TITLE)!!,  // DBでNOT NULL制約
         record.getValue(BOOKS.AUTHOR_IDS)!!.filterNotNull().toList(),  // 同上
         record.getValue(BOOKS.CREATED_AT),
         record.getValue(BOOKS.UPDATED_AT)
